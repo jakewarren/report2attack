@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APT29 Targeting Government Agencies - Threat Intelligence Report</title>
+    <meta name="author" content="Security Research Team">
+    <meta name="date" content="2024-01-15">
+</head>
+<body>
+    <header>
+        <h1>APT29 Targeting Government Agencies</h1>
+        <p class="byline">By Security Research Team | January 15, 2024</p>
+    </header>
+
+    <article>
+        <section id="executive-summary">
+            <h2>Executive Summary</h2>
+            <p>
+                This report details a sophisticated cyber espionage campaign attributed to APT29
+                (also known as Cozy Bear) targeting government agencies in Europe and North America
+                during Q4 2023. The campaign demonstrates advanced tradecraft and multiple stages
+                of intrusion.
+            </p>
+        </section>
+
+        <section id="initial-access">
+            <h2>Initial Access</h2>
+            <p>
+                The attackers initiated the campaign through spearphishing emails containing
+                malicious PDF attachments. These emails were carefully crafted to appear as
+                legitimate diplomatic communications, leveraging current geopolitical events
+                to increase their success rate.
+            </p>
+            <p>
+                Upon opening the PDF attachment, a macro-enabled document was extracted and
+                executed, establishing the initial foothold. The malicious macro utilized
+                obfuscated PowerShell commands to download the next-stage payload from a
+                compromised legitimate website.
+            </p>
+        </section>
+
+        <section id="execution">
+            <h2>Execution and Persistence</h2>
+            <p>
+                The PowerShell script executed several commands to establish persistence.
+                First, it created a scheduled task that would run daily at system startup,
+                ensuring the malware maintained access even after system reboots.
+            </p>
+            <p>
+                Additionally, the attackers modified Windows registry keys to enable further
+                execution capabilities and disable certain security features. The malware
+                also injected code into legitimate Windows processes to avoid detection.
+            </p>
+        </section>
+
+        <section id="credential-access">
+            <h2>Credential Harvesting</h2>
+            <p>
+                Once established, the attackers deployed credential dumping tools to extract
+                credentials from LSASS memory. They also utilized keylogging capabilities to
+                capture passwords entered by users during normal operations.
+            </p>
+            <p>
+                The stolen credentials were then used to access additional systems within the
+                network using legitimate authentication mechanisms, making the lateral movement
+                difficult to distinguish from normal administrative activity.
+            </p>
+        </section>
+
+        <section id="lateral-movement">
+            <h2>Lateral Movement</h2>
+            <p>
+                Using the harvested credentials, APT29 moved laterally across the network using
+                Windows Remote Desktop Protocol (RDP) and Windows Management Instrumentation (WMI).
+                This allowed them to access high-value targets including file servers and domain
+                controllers.
+            </p>
+        </section>
+
+        <section id="collection">
+            <h2>Data Collection and Exfiltration</h2>
+            <p>
+                The attackers collected sensitive documents from compromised systems, focusing
+                on classified materials and strategic planning documents. Files were compressed
+                into encrypted archives before exfiltration.
+            </p>
+            <p>
+                Data exfiltration occurred through HTTPS connections to attacker-controlled
+                infrastructure, disguised as normal web traffic. The attackers used cloud
+                storage services as an additional exfiltration channel, uploading stolen
+                data to compromised cloud accounts.
+            </p>
+        </section>
+
+        <section id="recommendations">
+            <h2>Recommendations</h2>
+            <ul>
+                <li>Implement strict email filtering and disable macros by default</li>
+                <li>Deploy endpoint detection and response (EDR) solutions</li>
+                <li>Enable PowerShell logging and monitor for suspicious commands</li>
+                <li>Implement multi-factor authentication across all systems</li>
+                <li>Regular security awareness training for employees</li>
+            </ul>
+        </section>
+    </article>
+
+    <footer>
+        <p>&copy; 2024 Security Research Team. All rights reserved.</p>
+    </footer>
+</body>
+</html>

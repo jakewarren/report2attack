@@ -1,0 +1,260 @@
+{
+  "name": "report2attack - Contagious Interview | North Korean Threat Actors Reveal Plans and Ops by Abusing Cyber Intel Platforms",
+  "versions": {
+    "attack": "18.1",
+    "navigator": "5.3.0",
+    "layer": "4.5"
+  },
+  "domain": "enterprise-attack",
+  "description": "ATT&CK mapping generated from: https://www.sentinelone.com/labs/contagious-interview-threat-actors-scout-cyber-intel-platforms-reveal-plans-and-ops/",
+  "filters": {
+    "platforms": []
+  },
+  "sorting": 0,
+  "layout": {
+    "layout": "side",
+    "aggregateFunction": "average",
+    "showID": true,
+    "showName": true,
+    "showAggregateScores": false,
+    "countUnscored": false,
+    "expandedSubtechniques": "annotated"
+  },
+  "hideDisabled": false,
+  "techniques": [
+    {
+      "techniqueID": "T1681",
+      "tactic": "reconnaissance",
+      "color": "",
+      "comment": "Confidence: 0.90\nEvidence: actively monitor cyber threat intelligence to detect infrastructure exposure and scout for new assets | The Contagious Interview threat actors also use VirusTotal, or monitor what information about th",
+      "enabled": true,
+      "metadata": [],
+      "links": [],
+      "showSubtechniques": true,
+      "score": 0.9
+    },
+    {
+      "techniqueID": "T1597.001",
+      "tactic": "reconnaissance",
+      "color": "",
+      "comment": "Confidence: 0.90\nEvidence: register and use Validin community access accounts within approximately 24 hours after Validin published a blog post on 11 March 2025 | These included VirusTotal and the apt_lazarus.txt file, which is",
+      "enabled": true,
+      "metadata": [],
+      "links": [],
+      "showSubtechniques": true,
+      "score": 0.9
+    },
+    {
+      "techniqueID": "T1583",
+      "tactic": "Resource Development",
+      "color": "",
+      "comment": "Confidence: 0.85\nEvidence: We observed a high rate of new infrastructure deployment by the Contagious Interview threat actors alongside losses of existing infrastructure due to actions by service providers, which supports this ",
+      "enabled": true,
+      "metadata": [],
+      "links": [],
+      "showSubtechniques": true,
+      "score": 0.85
+    },
+    {
+      "techniqueID": "T1585.002",
+      "tactic": "resource-development",
+      "color": "",
+      "comment": "Confidence: 0.85\nEvidence: The email addresses used for Validin account registrations. | The threat actors used Google Gmail addresses that we had already been tracking as Contagious Interview artifacts at the time of registrat",
+      "enabled": true,
+      "metadata": [],
+      "links": [],
+      "showSubtechniques": true,
+      "score": 0.85
+    },
+    {
+      "techniqueID": "T1204.004",
+      "tactic": "Execution",
+      "color": "",
+      "comment": "Confidence: 0.92\nEvidence: they are then instructed to copy and paste command lines, often involving utilities like curl , to download and execute a supposed update from a separate malware distribution server, unknowingly deplo",
+      "enabled": true,
+      "metadata": [],
+      "links": [],
+      "showSubtechniques": true,
+      "score": 0.92
+    },
+    {
+      "techniqueID": "T1204",
+      "tactic": "Execution",
+      "color": "",
+      "comment": "Confidence: 0.75\nEvidence: to trick targets into executing malware",
+      "enabled": true,
+      "metadata": [],
+      "links": [],
+      "showSubtechniques": true,
+      "score": 0.75
+    },
+    {
+      "techniqueID": "T1598.003",
+      "tactic": "Initial Access",
+      "color": "",
+      "comment": "Confidence: 0.85\nEvidence: A targeted job seeker receives an invitation to participate in a job application process, directing them to a lure website where they are prompted to complete a skill assessment.",
+      "enabled": true,
+      "metadata": [],
+      "links": [],
+      "showSubtechniques": true,
+      "score": 0.85
+    },
+    {
+      "techniqueID": "T1585",
+      "tactic": "resource-development",
+      "color": "",
+      "comment": "Confidence: 0.92\nEvidence: The threat actors started creating Validin community accounts on 12 March 2025 at 22:44:11 UTC, an activity which spanned a relatively short interval of approximately 15 minutes, suggesting a concentr",
+      "enabled": true,
+      "metadata": [],
+      "links": [],
+      "showSubtechniques": true,
+      "score": 0.92
+    },
+    {
+      "techniqueID": "T1589.002",
+      "tactic": "reconnaissance",
+      "color": "",
+      "comment": "Confidence: 0.92\nEvidence: We present below the email addresses used for Validin account registrations, along with the date, time, and originating IP addresses of these registrations. | For example, marvel714jm[@]gmail.com and ",
+      "enabled": true,
+      "metadata": [],
+      "links": [],
+      "showSubtechniques": true,
+      "score": 0.92
+    },
+    {
+      "techniqueID": "T1586.002",
+      "tactic": "resource-development",
+      "color": "",
+      "comment": "Confidence: 0.85\nEvidence: \"login attempts on 9 May 2025 using the excellentreporter321[@]gmail.com and marvel714jm[@]gmail.com accounts, which had been blocked by Validin in March 2025. The threat actors\u2019 shift to using non-Gm",
+      "enabled": true,
+      "metadata": [],
+      "links": [],
+      "showSubtechniques": true,
+      "score": 0.85
+    },
+    {
+      "techniqueID": "T1583.001",
+      "tactic": "Resource Development",
+      "color": "",
+      "comment": "Confidence: 0.95\nEvidence: The attackers align with the domain quiz-nest[.]com , while Paxos corresponds to domains such as paxos-video-interview[.]com and paxosassessments[.]com . The account marvel714jm[@]gmail.com , which us",
+      "enabled": true,
+      "metadata": [],
+      "links": [],
+      "showSubtechniques": true,
+      "score": 0.95
+    },
+    {
+      "techniqueID": "T1596.002",
+      "tactic": "reconnaissance",
+      "color": "",
+      "comment": "Confidence: 0.55\nEvidence: The domain registration records for versusx.us include the email address brooksliam534@gmail.com.",
+      "enabled": true,
+      "metadata": [],
+      "links": [],
+      "showSubtechniques": true,
+      "score": 0.55
+    },
+    {
+      "techniqueID": "T1589",
+      "tactic": "reconnaissance",
+      "color": "",
+      "comment": "Confidence: 0.90\nEvidence: \"registration forms requesting information such as full name, affiliation, and reason for registration.\"",
+      "enabled": true,
+      "metadata": [],
+      "links": [],
+      "showSubtechniques": true,
+      "score": 0.9
+    },
+    {
+      "techniqueID": "T1036.010",
+      "tactic": "defense-evasion",
+      "color": "",
+      "comment": "Confidence: 0.92\nEvidence: The threat actors used a diverse range of names, from generic handles like jimmr to pop-culture references such as Rock Lee (a character from the Japanese anime series Santiago Montes). The reuse of t",
+      "enabled": true,
+      "metadata": [],
+      "links": [],
+      "showSubtechniques": true,
+      "score": 0.92
+    },
+    {
+      "techniqueID": "T1589.003",
+      "tactic": "reconnaissance",
+      "color": "",
+      "comment": "Confidence: 0.72\nEvidence: The threat actors used a diverse range of names, from generic handles like jimmr to pop-culture references such as Rock Lee (a character from the Japanese anime series Santiago Montes).",
+      "enabled": true,
+      "metadata": [],
+      "links": [],
+      "showSubtechniques": true,
+      "score": 0.72
+    },
+    {
+      "techniqueID": "T1213.005",
+      "tactic": "collection",
+      "color": "",
+      "comment": "Confidence: 0.90\nEvidence: In addition, we identified strong indicators that the threat actors were using Slack, a messaging platform commonly used for team communication and collaboration, to coordinate their activities.",
+      "enabled": true,
+      "metadata": [],
+      "links": [],
+      "showSubtechniques": true,
+      "score": 0.9
+    },
+    {
+      "techniqueID": "T1593",
+      "tactic": "reconnaissance",
+      "color": "",
+      "comment": "Confidence: 0.85\nEvidence: the jimmr6587[@]gmail.com account was the first to search for the domain webcamfixer[.]online on 12 March 2025 at 22:54:19 UTC",
+      "enabled": true,
+      "metadata": [],
+      "links": [],
+      "showSubtechniques": true,
+      "score": 0.85
+    },
+    {
+      "techniqueID": "T1665",
+      "tactic": "Command and Control",
+      "color": "",
+      "comment": "Confidence: 0.90\nEvidence: Some may have been voluntarily deactivated by the threat actors themselves, likely to avoid seizure or further investigation, particularly if the domains were linked to their operational security",
+      "enabled": true,
+      "metadata": [],
+      "links": [],
+      "showSubtechniques": true,
+      "score": 0.9
+    },
+    {
+      "techniqueID": "T1105",
+      "tactic": "Command and Control",
+      "color": "",
+      "comment": "Confidence: 0.85\nEvidence: \"method of interaction with the server, such as the use of the curl command\" | \"Malware download initiations are logged in files such as client_ips_start.json and client_ips_mac_start.json , which cap",
+      "enabled": true,
+      "metadata": [],
+      "links": [],
+      "showSubtechniques": true,
+      "score": 0.85
+    },
+    {
+      "techniqueID": "T1608.001",
+      "tactic": "Resource Development",
+      "color": "",
+      "comment": "Confidence: 0.90\nEvidence: \"newly deployed ClickFix malware distribution servers, such as api.camdriverhelp[.]club and api.drive-release[.]cloud, were exposing ContagiousDrop applications along with the log files they had gener",
+      "enabled": true,
+      "metadata": [],
+      "links": [],
+      "showSubtechniques": true,
+      "score": 0.9
+    }
+  ],
+  "gradient": {
+    "colors": [
+      "#ffffff",
+      "#42a5f5",
+      "#ff4444"
+    ],
+    "minValue": 0,
+    "maxValue": 1
+  },
+  "legendItems": [],
+  "metadata": [],
+  "links": [],
+  "showTacticRowBackground": false,
+  "tacticRowBackground": "#dddddd"
+}

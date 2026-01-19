@@ -1,0 +1,95 @@
+{
+    "techniques": [
+        {
+            "technique_id": "T1566.001",
+            "technique_name": "Spearphishing Attachment",
+            "confidence": 0.95,
+            "evidence": "The attackers initiated the campaign through spearphishing emails containing malicious PDF attachments. These emails were carefully crafted to appear as legitimate diplomatic communications.",
+            "tactics": ["initial-access"]
+        },
+        {
+            "technique_id": "T1059.001",
+            "technique_name": "PowerShell",
+            "confidence": 0.92,
+            "evidence": "The malicious macro utilized obfuscated PowerShell commands to download the next-stage payload from a compromised legitimate website. The PowerShell script executed several commands to establish persistence.",
+            "tactics": ["execution"]
+        },
+        {
+            "technique_id": "T1053.005",
+            "technique_name": "Scheduled Task",
+            "confidence": 0.90,
+            "evidence": "It created a scheduled task that would run daily at system startup, ensuring the malware maintained access even after system reboots.",
+            "tactics": ["execution", "persistence", "privilege-escalation"]
+        },
+        {
+            "technique_id": "T1112",
+            "technique_name": "Modify Registry",
+            "confidence": 0.88,
+            "evidence": "The attackers modified Windows registry keys to enable further execution capabilities and disable certain security features.",
+            "tactics": ["defense-evasion"]
+        },
+        {
+            "technique_id": "T1055",
+            "technique_name": "Process Injection",
+            "confidence": 0.85,
+            "evidence": "The malware also injected code into legitimate Windows processes to avoid detection.",
+            "tactics": ["defense-evasion", "privilege-escalation"]
+        },
+        {
+            "technique_id": "T1003.001",
+            "technique_name": "LSASS Memory",
+            "confidence": 0.93,
+            "evidence": "The attackers deployed credential dumping tools to extract credentials from LSASS memory.",
+            "tactics": ["credential-access"]
+        },
+        {
+            "technique_id": "T1056.001",
+            "technique_name": "Keylogging",
+            "confidence": 0.87,
+            "evidence": "They also utilized keylogging capabilities to capture passwords entered by users during normal operations.",
+            "tactics": ["collection", "credential-access"]
+        },
+        {
+            "technique_id": "T1078",
+            "technique_name": "Valid Accounts",
+            "confidence": 0.91,
+            "evidence": "The stolen credentials were then used to access additional systems within the network using legitimate authentication mechanisms, making the lateral movement difficult to distinguish from normal administrative activity.",
+            "tactics": ["defense-evasion", "persistence", "privilege-escalation", "initial-access"]
+        },
+        {
+            "technique_id": "T1021.001",
+            "technique_name": "Remote Desktop Protocol",
+            "confidence": 0.89,
+            "evidence": "APT29 moved laterally across the network using Windows Remote Desktop Protocol (RDP) and Windows Management Instrumentation (WMI).",
+            "tactics": ["lateral-movement"]
+        },
+        {
+            "technique_id": "T1047",
+            "technique_name": "Windows Management Instrumentation",
+            "confidence": 0.89,
+            "evidence": "APT29 moved laterally across the network using Windows Remote Desktop Protocol (RDP) and Windows Management Instrumentation (WMI).",
+            "tactics": ["execution"]
+        },
+        {
+            "technique_id": "T1560.001",
+            "technique_name": "Archive via Utility",
+            "confidence": 0.86,
+            "evidence": "Files were compressed into encrypted archives before exfiltration.",
+            "tactics": ["collection"]
+        },
+        {
+            "technique_id": "T1041",
+            "technique_name": "Exfiltration Over C2 Channel",
+            "confidence": 0.84,
+            "evidence": "Data exfiltration occurred through HTTPS connections to attacker-controlled infrastructure, disguised as normal web traffic.",
+            "tactics": ["exfiltration"]
+        },
+        {
+            "technique_id": "T1567.002",
+            "technique_name": "Exfiltration to Cloud Storage",
+            "confidence": 0.88,
+            "evidence": "The attackers used cloud storage services as an additional exfiltration channel, uploading stolen data to compromised cloud accounts.",
+            "tactics": ["exfiltration"]
+        }
+    ]
+}
