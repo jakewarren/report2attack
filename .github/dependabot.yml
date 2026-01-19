@@ -1,0 +1,16 @@
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+
+  - package-ecosystem: pip
+    directory: /
+    schedule:
+      interval: monthly
+    # Only allow security updates by disabling version updates
+    open-pull-requests-limit: 0
+    # Wait for major releases to stabilize (skips initial .0 release if .1 follows quickly)
+    cooldown:
+      semver-major-days: 14
