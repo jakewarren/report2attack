@@ -3,7 +3,7 @@
 import json
 import csv
 from pathlib import Path
-from typing import List, Dict, Any, Optional
+from typing import Any
 from datetime import datetime
 from collections import defaultdict
 
@@ -11,7 +11,7 @@ from collections import defaultdict
 class OutputFormatter:
     """Base class for output formatters."""
 
-    def __init__(self, results: Dict[str, Any]) -> None:
+    def __init__(self, results: dict[str, Any]) -> None:
         """
         Initialize formatter.
 
@@ -30,7 +30,7 @@ class OutputFormatter:
 class JSONFormatter(OutputFormatter):
     """JSON output formatter."""
 
-    def format(self, output_path: Optional[str] = None) -> str:
+    def format(self, output_path: str | None = None) -> str:
         """
         Format results as JSON.
 
@@ -79,7 +79,7 @@ class JSONFormatter(OutputFormatter):
 class CSVFormatter(OutputFormatter):
     """CSV output formatter."""
 
-    def format(self, output_path: Optional[str] = None) -> str:
+    def format(self, output_path: str | None = None) -> str:
         """
         Format results as CSV.
 
@@ -128,7 +128,7 @@ class CSVFormatter(OutputFormatter):
 class MarkdownFormatter(OutputFormatter):
     """Markdown report formatter."""
 
-    def format(self, output_path: Optional[str] = None) -> str:
+    def format(self, output_path: str | None = None) -> str:
         """
         Format results as Markdown.
 
@@ -144,14 +144,14 @@ class MarkdownFormatter(OutputFormatter):
         techniques = self.results.get("techniques", [])
 
         # Group by tactic
-        by_tactic: Dict[str, List[Dict[str, Any]]] = defaultdict(list)
+        by_tactic: dict[str, list[dict[str, Any]]] = defaultdict(list)
         for tech in techniques:
             for tactic in tech.get("tactics", ["uncategorized"]):
                 by_tactic[tactic].append(tech)
 
         # Build markdown
         lines = [
-            f"# ATT&CK Mapping Report\n\n",
+            "# ATT&CK Mapping Report\n\n",
             f"**Source:** {self.results.get('source', 'Unknown')}\n",
             f"**Title:** {self.results.get('title', 'N/A')}\n",
             f"**Generated:** {datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')} UTC\n",
@@ -203,7 +203,7 @@ class NavigatorFormatter(OutputFormatter):
         filename = super()._generate_filename(source, extension)
         return filename.replace(f".{extension}", f"_navigator.{extension}")
 
-    def format(self, output_path: Optional[str] = None) -> str:
+    def format(self, output_path: str | None = None) -> str:
         """
         Format results as ATT&CK Navigator layer.
 
@@ -276,10 +276,10 @@ class NavigatorFormatter(OutputFormatter):
 
 
 def format_results(
-    results: Dict[str, Any],
-    formats: List[str],
-    output_dir: Optional[str] = None,
-) -> Dict[str, str]:
+    results: dict[str, Any],
+    formats: list[str],
+    output_dir: str | None = None,
+) -> dict[str, str]:
     """
     Format results in multiple formats.
 
