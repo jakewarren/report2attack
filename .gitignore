@@ -64,7 +64,7 @@ dmypy.json
 *.sqlite3
 chroma_db/
 vector_store/
-output/
+/output/
 *.log
 
 # Documentation
