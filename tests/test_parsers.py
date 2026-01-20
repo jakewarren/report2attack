@@ -178,6 +178,16 @@ class TestInputDetection:
         """Test detection of HTTPS URL."""
         assert detect_input_type("https://example.com/article") == InputType.WEB
 
+    def test_detect_pdf_url(self) -> None:
+        """Test detection of PDF URL."""
+        assert detect_input_type("https://example.com/report.pdf") == InputType.PDF_URL
+        assert detect_input_type("http://example.com/file.PDF") == InputType.PDF_URL
+
+    def test_detect_pdf_url_with_query_params(self) -> None:
+        """Test detection of PDF URL with query parameters."""
+        # URLs with .pdf before query params should be detected as PDF_URL
+        assert detect_input_type("https://example.com/report.pdf?download=1") == InputType.PDF_URL
+
     def test_detect_pdf_file(self, tmp_path: Path) -> None:
         """Test detection of PDF file."""
         pdf_file = tmp_path / "test.pdf"
@@ -226,3 +236,31 @@ class TestParseInput:
         """Test parsing unknown input type."""
         with pytest.raises(ValueError, match="Cannot determine input type"):
             parse_input("unknown_input")
+
+    @patch("report2attack.parsers.TemporaryPDFDownload")
+    @patch("report2attack.parsers.parse_pdf")
+    def test_parse_input_pdf_url(self, mock_parse_pdf, mock_temp_download) -> None:
+        """Test parsing PDF URL through parse_input."""
+        # Mock TemporaryPDFDownload context manager
+        mock_temp_download.return_value.__enter__.return_value = "/tmp/downloaded.pdf"
+        mock_temp_download.return_value.__exit__.return_value = None
+
+        # Mock parse_pdf to return result
+        mock_parse_pdf.return_value = {
+            "text": "Downloaded PDF content",
+            "title": "Test PDF",
+            "source": "/tmp/downloaded.pdf",
+            "metadata": {},
+        }
+
+        result = parse_input("https://example.com/report.pdf")
+
+        # Verify download was initiated
+        mock_temp_download.assert_called_once_with("https://example.com/report.pdf")
+
+        # Verify PDF was parsed
+        mock_parse_pdf.assert_called_once_with("/tmp/downloaded.pdf")
+
+        # Verify source URL is preserved (not temp file path)
+        assert result["source"] == "https://example.com/report.pdf"
+        assert result["text"] == "Downloaded PDF content"

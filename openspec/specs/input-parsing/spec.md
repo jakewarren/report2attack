@@ -35,19 +35,15 @@ The system SHALL extract text content from PDF files using multiple parsing back
 - **THEN** system returns an error message indicating the parsing failure
 
 ### Requirement: Input Type Detection
-The system SHALL automatically detect input type based on provided argument.
+The system SHALL automatically detect input type based on provided argument, including PDF URLs.
 
-#### Scenario: Detect URL input
-- **WHEN** input starts with http:// or https://
-- **THEN** system routes to web parser
+#### Scenario: Detect PDF URL input
+- **WHEN** input starts with `http://` or `https://` and ends with `.pdf`
+- **THEN** system routes to PDF download handler
 
-#### Scenario: Detect file path input
-- **WHEN** input is a file path ending in .pdf
-- **THEN** system routes to PDF parser
-
-#### Scenario: Ambiguous input
-- **WHEN** input type cannot be determined
-- **THEN** system returns an error with usage examples
+#### Scenario: Detect web URL for HTML content
+- **WHEN** input starts with `http://` or `https://` and does not end with `.pdf`
+- **THEN** system routes to web parser (unchanged behavior)
 
 ### Requirement: Text Extraction Output
 The system SHALL return extracted text in a normalized format.
@@ -59,4 +55,45 @@ The system SHALL return extracted text in a normalized format.
 #### Scenario: Metadata preservation
 - **WHEN** source document has metadata (author, date, URL)
 - **THEN** system preserves metadata in output structure
+
+### Requirement: PDF URL Detection and Download
+The system SHALL detect when a URL points to a PDF document and download it for parsing.
+
+#### Scenario: Detect PDF URL by extension
+- **WHEN** user provides a URL ending in `.pdf` (e.g., `https://example.com/report.pdf`)
+- **THEN** system detects it as a PDF URL input type
+- **AND** routes to PDF download handler instead of web parser
+
+#### Scenario: Detect PDF URL by Content-Type
+- **WHEN** URL does not end in `.pdf` but server returns `Content-Type: application/pdf`
+- **THEN** system detects it as a PDF document
+- **AND** downloads and parses as PDF
+
+#### Scenario: Download PDF to temporary location
+- **WHEN** system detects a PDF URL
+- **THEN** system downloads the PDF to a temporary file using `requests` library
+- **AND** passes the temporary file path to existing PDF parser
+- **AND** deletes the temporary file after parsing (even on error)
+
+#### Scenario: Stream PDF files
+- **WHEN** downloading any PDF from a URL
+- **THEN** system streams the content to disk instead of loading into memory
+- **AND** provides efficient handling of PDFs of any size
+
+#### Scenario: Handle network errors during download
+- **WHEN** PDF URL is unreachable, times out, or returns HTTP error
+- **THEN** system returns clear error message indicating network failure
+- **AND** includes HTTP status code and error details
+
+#### Scenario: Validate PDF size before download
+- **WHEN** system detects a PDF URL
+- **THEN** system performs HEAD request to check Content-Length
+- **AND** rejects downloads exceeding 100MB with clear error message
+- **AND** proceeds with download if size is within limit
+
+#### Scenario: Handle redirects for PDF URLs
+- **WHEN** PDF URL redirects to another location
+- **THEN** system follows redirects (up to 5 redirects)
+- **AND** downloads PDF from final destination
+- **AND** validates final URL points to PDF content
 

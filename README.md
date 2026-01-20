@@ -77,6 +77,9 @@ uv run report2attack /path/to/report.pdf
 uv run report2attack https://example.com/report.html \
   --output-dir ./results \
   --formats json csv markdown navigator
+
+# Run directly from GitHub (no clone or installation needed)
+uvx --from git+https://github.com/jakewarren/report2attack report2attack https://example.com/threat-report.html
 ```
 
 ### Configuration
@@ -108,7 +111,7 @@ This one-time setup takes 5-10 minutes depending on your connection and compute.
 Usage: report2attack [OPTIONS] INPUT_SOURCE
 
 Arguments:
-  INPUT_SOURCE  URL (http:// or https://) or path to PDF file
+  INPUT_SOURCE  Web URL, PDF URL, or local PDF file path
 
 Options:
   -o, --output-dir PATH           Output directory [default: .]
