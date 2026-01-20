@@ -88,11 +88,10 @@ class TestTemporaryPDFDownload:
         self, mock_head_response: Mock, mock_get_response: Mock, mock_pdf_content: bytes
     ) -> None:
         """Test successful PDF download and cleanup."""
-        with patch("report2attack.parsers.pdf_url.requests.Session") as mock_session_class:
-            mock_session = Mock()
-            mock_session.head.return_value = mock_head_response
-            mock_session.get.return_value = mock_get_response
-            mock_session_class.return_value = mock_session
+        with patch("report2attack.parsers.pdf_url.requests.head") as mock_head, \
+             patch("report2attack.parsers.pdf_url.requests.get") as mock_get:
+            mock_head.return_value = mock_head_response
+            mock_get.return_value = mock_get_response
 
             with TemporaryPDFDownload("https://example.com/test.pdf") as temp_path:
                 # File should exist and be readable
@@ -109,10 +108,8 @@ class TestTemporaryPDFDownload:
         # Set Content-Length to 150MB
         mock_head_response.headers["Content-Length"] = str(150 * 1024 * 1024)
 
-        with patch("report2attack.parsers.pdf_url.requests.Session") as mock_session_class:
-            mock_session = Mock()
-            mock_session.head.return_value = mock_head_response
-            mock_session_class.return_value = mock_session
+        with patch("report2attack.parsers.pdf_url.requests.head") as mock_head:
+            mock_head.return_value = mock_head_response
 
             with pytest.raises(ValueError, match="too large"):
                 with TemporaryPDFDownload("https://example.com/large.pdf"):
@@ -129,11 +126,10 @@ class TestTemporaryPDFDownload:
         large_chunk = b"x" * (50 * 1024 * 1024)  # 50MB chunks
         mock_get_response.iter_content = Mock(return_value=[large_chunk, large_chunk, large_chunk])
 
-        with patch("report2attack.parsers.pdf_url.requests.Session") as mock_session_class:
-            mock_session = Mock()
-            mock_session.head.return_value = mock_head_response
-            mock_session.get.return_value = mock_get_response
-            mock_session_class.return_value = mock_session
+        with patch("report2attack.parsers.pdf_url.requests.head") as mock_head, \
+             patch("report2attack.parsers.pdf_url.requests.get") as mock_get:
+            mock_head.return_value = mock_head_response
+            mock_get.return_value = mock_get_response
 
             with pytest.raises(ValueError, match="exceeded.*size limit"):
                 with TemporaryPDFDownload("https://example.com/test.pdf"):
@@ -141,13 +137,12 @@ class TestTemporaryPDFDownload:
 
     def test_http_error(self, mock_head_response: Mock) -> None:
         """Test handling of HTTP errors."""
-        with patch("report2attack.parsers.pdf_url.requests.Session") as mock_session_class:
-            # Create RequestException
-            request_exception = requests.RequestException("404 Not Found")
-            mock_session = Mock()
-            mock_head_response.raise_for_status = Mock(side_effect=request_exception)
-            mock_session.head.return_value = mock_head_response
-            mock_session_class.return_value = mock_session
+        # Create RequestException
+        request_exception = requests.RequestException("404 Not Found")
+        mock_head_response.raise_for_status = Mock(side_effect=request_exception)
+
+        with patch("report2attack.parsers.pdf_url.requests.head") as mock_head:
+            mock_head.return_value = mock_head_response
 
             with pytest.raises(ValueError, match="Failed to access PDF URL"):
                 with TemporaryPDFDownload("https://example.com/missing.pdf"):
@@ -155,18 +150,18 @@ class TestTemporaryPDFDownload:
 
     def test_timeout_error(self) -> None:
         """Test handling of timeout errors."""
-        with patch("report2attack.parsers.pdf_url.requests.Session") as mock_session_class:
-            # Create Timeout exception
-            timeout_exception = requests.Timeout("Connection timeout")
+        # Create Timeout exception
+        timeout_exception = requests.Timeout("Connection timeout")
 
-            mock_session = Mock()
-            mock_head_resp = Mock(
-                headers={"Content-Type": "application/pdf"},
-                raise_for_status=Mock(),
-            )
-            mock_session.head.return_value = mock_head_resp
-            mock_session.get.side_effect = timeout_exception
-            mock_session_class.return_value = mock_session
+        mock_head_resp = Mock(
+            headers={"Content-Type": "application/pdf"},
+            raise_for_status=Mock(),
+        )
+
+        with patch("report2attack.parsers.pdf_url.requests.head") as mock_head, \
+             patch("report2attack.parsers.pdf_url.requests.get") as mock_get:
+            mock_head.return_value = mock_head_resp
+            mock_get.side_effect = timeout_exception
 
             with pytest.raises(ValueError, match="Download timeout"):
                 with TemporaryPDFDownload("https://example.com/slow.pdf"):
@@ -181,11 +176,10 @@ class TestTemporaryPDFDownload:
             return_value=[b"<html><body>Not a PDF</body></html>"]
         )
 
-        with patch("report2attack.parsers.pdf_url.requests.Session") as mock_session_class:
-            mock_session = Mock()
-            mock_session.head.return_value = mock_head_response
-            mock_session.get.return_value = mock_get_response
-            mock_session_class.return_value = mock_session
+        with patch("report2attack.parsers.pdf_url.requests.head") as mock_head, \
+             patch("report2attack.parsers.pdf_url.requests.get") as mock_get:
+            mock_head.return_value = mock_head_response
+            mock_get.return_value = mock_get_response
 
             with pytest.raises(ValueError, match="not a valid PDF"):
                 with TemporaryPDFDownload("https://example.com/fake.pdf"):
@@ -198,11 +192,10 @@ class TestTemporaryPDFDownload:
         # Server returns wrong Content-Type
         mock_head_response.headers["Content-Type"] = "text/html"
 
-        with patch("report2attack.parsers.pdf_url.requests.Session") as mock_session_class:
-            mock_session = Mock()
-            mock_session.head.return_value = mock_head_response
-            mock_session.get.return_value = mock_get_response
-            mock_session_class.return_value = mock_session
+        with patch("report2attack.parsers.pdf_url.requests.head") as mock_head, \
+             patch("report2attack.parsers.pdf_url.requests.get") as mock_get:
+            mock_head.return_value = mock_head_response
+            mock_get.return_value = mock_get_response
 
             # Should succeed because we validate magic bytes
             with TemporaryPDFDownload("https://example.com/test.pdf") as temp_path:
@@ -214,15 +207,15 @@ class TestTemporaryPDFDownload:
         """Test that temp file is cleaned up even when exception occurs."""
         temp_path = None
 
-        with patch("report2attack.parsers.pdf_url.requests.Session") as mock_session_class:
-            mock_session = Mock()
-            mock_session.head.return_value = mock_head_response
-            # Make GET fail with invalid PDF content
-            mock_get_response.iter_content = Mock(
-                return_value=[b"Not a PDF"]
-            )
-            mock_session.get.return_value = mock_get_response
-            mock_session_class.return_value = mock_session
+        # Make GET fail with invalid PDF content
+        mock_get_response.iter_content = Mock(
+            return_value=[b"Not a PDF"]
+        )
+
+        with patch("report2attack.parsers.pdf_url.requests.head") as mock_head, \
+             patch("report2attack.parsers.pdf_url.requests.get") as mock_get:
+            mock_head.return_value = mock_head_response
+            mock_get.return_value = mock_get_response
 
             try:
                 with TemporaryPDFDownload("https://example.com/test.pdf") as path:
@@ -238,46 +231,43 @@ class TestTemporaryPDFDownload:
         self, mock_head_response: Mock, mock_get_response: Mock
     ) -> None:
         """Test that redirects are followed correctly."""
-        with patch("report2attack.parsers.pdf_url.requests.Session") as mock_session_class:
-            mock_session = Mock()
-            mock_session.head.return_value = mock_head_response
-            mock_session.get.return_value = mock_get_response
-            mock_session_class.return_value = mock_session
+        with patch("report2attack.parsers.pdf_url.requests.head") as mock_head, \
+             patch("report2attack.parsers.pdf_url.requests.get") as mock_get:
+            mock_head.return_value = mock_head_response
+            mock_get.return_value = mock_get_response
 
             with TemporaryPDFDownload("https://example.com/redirect.pdf"):
                 pass
 
             # Verify allow_redirects was set
-            assert mock_session.head.call_args.kwargs.get("allow_redirects") is True
-            assert mock_session.get.call_args.kwargs.get("allow_redirects") is True
+            assert mock_head.call_args.kwargs.get("allow_redirects") is True
+            assert mock_get.call_args.kwargs.get("allow_redirects") is True
 
     def test_custom_timeout(self, mock_head_response: Mock, mock_get_response: Mock) -> None:
         """Test custom timeout configuration."""
-        with patch("report2attack.parsers.pdf_url.requests.Session") as mock_session_class:
-            mock_session = Mock()
-            mock_session.head.return_value = mock_head_response
-            mock_session.get.return_value = mock_get_response
-            mock_session_class.return_value = mock_session
+        with patch("report2attack.parsers.pdf_url.requests.head") as mock_head, \
+             patch("report2attack.parsers.pdf_url.requests.get") as mock_get:
+            mock_head.return_value = mock_head_response
+            mock_get.return_value = mock_get_response
 
             with TemporaryPDFDownload("https://example.com/test.pdf", timeout=60):
                 pass
 
             # Verify timeout was passed correctly
-            assert mock_session.head.call_args.kwargs.get("timeout") == 60
-            assert mock_session.get.call_args.kwargs.get("timeout") == 60
+            assert mock_head.call_args.kwargs.get("timeout") == 60
+            assert mock_get.call_args.kwargs.get("timeout") == 60
 
     def test_streaming_enabled(
         self, mock_head_response: Mock, mock_get_response: Mock
     ) -> None:
         """Test that streaming is enabled for downloads."""
-        with patch("report2attack.parsers.pdf_url.requests.Session") as mock_session_class:
-            mock_session = Mock()
-            mock_session.head.return_value = mock_head_response
-            mock_session.get.return_value = mock_get_response
-            mock_session_class.return_value = mock_session
+        with patch("report2attack.parsers.pdf_url.requests.head") as mock_head, \
+             patch("report2attack.parsers.pdf_url.requests.get") as mock_get:
+            mock_head.return_value = mock_head_response
+            mock_get.return_value = mock_get_response
 
             with TemporaryPDFDownload("https://example.com/test.pdf"):
                 pass
 
             # Verify streaming was enabled
-            assert mock_session.get.call_args.kwargs.get("stream") is True
+            assert mock_get.call_args.kwargs.get("stream") is True

@@ -7,9 +7,6 @@ from urllib.parse import urlparse
 
 import requests
 
-# Modern browser User-Agent to avoid bot detection (Chrome 144, January 2026)
-USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.7559.59 Safari/537.36"
-
 
 def _validate_url_safety(url: str) -> None:
     """
@@ -87,18 +84,13 @@ class TemporaryPDFDownload:
         )
         self.file_path = self.temp_file.name
 
-        # Set headers with modern browser User-Agent
-        headers = {"User-Agent": USER_AGENT}
-
-        # Create session with 5-redirect limit per spec
-        session = requests.Session()
-        session.max_redirects = 5
-
         try:
             # Perform HEAD request to validate before downloading
+            # Note: We don't use a custom User-Agent as some servers (e.g., CISA.gov)
+            # block requests with browser-like User-Agents as anti-bot protection
             try:
-                head_response = session.head(
-                    self.url, headers=headers, timeout=self.timeout, allow_redirects=True
+                head_response = requests.head(
+                    self.url, timeout=self.timeout, allow_redirects=True
                 )
                 head_response.raise_for_status()
             except requests.RequestException as e:
@@ -127,8 +119,8 @@ class TemporaryPDFDownload:
 
             # Download with streaming to avoid loading entire file into memory
             try:
-                response = session.get(
-                    self.url, headers=headers, timeout=self.timeout, stream=True, allow_redirects=True
+                response = requests.get(
+                    self.url, timeout=self.timeout, stream=True, allow_redirects=True
                 )
                 response.raise_for_status()
             except requests.Timeout as e:
