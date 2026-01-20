@@ -3,8 +3,10 @@
 from enum import Enum
 from pathlib import Path
 
+import requests
+
 from .pdf import parse_pdf
-from .pdf_url import TemporaryPDFDownload
+from .pdf_url import TemporaryPDFDownload, USER_AGENT
 from .web import parse_web_url
 
 
@@ -21,6 +23,8 @@ def detect_input_type(input_str: str) -> InputType:
     """
     Detect input type from string.
 
+    Uses HTTP HEAD probing to detect PDF content type when URL doesn't end in .pdf.
+
     Args:
         input_str: Input string (URL or file path)
 
@@ -29,11 +33,54 @@ def detect_input_type(input_str: str) -> InputType:
     """
     # Check if it's a URL
     if input_str.startswith(("http://", "https://")):
-        # Check if URL points to a PDF (before query params or fragments)
-        # Extract path component before '?' or '#'
+        # First check URL suffix (fast path)
         url_path = input_str.split('?')[0].split('#')[0]
         if url_path.lower().endswith(".pdf"):
             return InputType.PDF_URL
+
+        # Perform HTTP HEAD probe to check Content-Type
+        # This handles cases where PDFs don't have .pdf extension
+        try:
+            session = requests.Session()
+            session.max_redirects = 5  # Enforce 5-redirect limit per spec
+
+            headers = {"User-Agent": USER_AGENT}
+
+            # Try HEAD request first (lightweight)
+            try:
+                response = session.head(
+                    input_str,
+                    headers=headers,
+                    timeout=5,  # Quick probe
+                    allow_redirects=True
+                )
+                content_type = response.headers.get("Content-Type", "")
+            except (requests.RequestException, requests.exceptions.InvalidHeader):
+                # HEAD failed, try GET with minimal range
+                try:
+                    headers["Range"] = "bytes=0-0"  # Request just 1 byte
+                    response = session.get(
+                        input_str,
+                        headers=headers,
+                        timeout=5,
+                        allow_redirects=True,
+                        stream=True  # Don't download body
+                    )
+                    response.close()  # Close immediately
+                    content_type = response.headers.get("Content-Type", "")
+                except requests.RequestException:
+                    # Network error - fall back to web parsing
+                    return InputType.WEB
+
+            # Check if Content-Type indicates PDF
+            if content_type and "application/pdf" in content_type.lower():
+                return InputType.PDF_URL
+
+        except Exception:
+            # Any unexpected error - fall back to web parsing
+            pass
+
+        # Default to web parsing for HTTP(S) URLs
         return InputType.WEB
 
     # Check if it's a PDF file

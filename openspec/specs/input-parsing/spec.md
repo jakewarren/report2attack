@@ -75,10 +75,10 @@ The system SHALL detect when a URL points to a PDF document and download it for 
 - **AND** passes the temporary file path to existing PDF parser
 - **AND** deletes the temporary file after parsing (even on error)
 
-#### Scenario: Stream large PDF files
-- **WHEN** downloading a PDF larger than 10MB
+#### Scenario: Stream PDF files
+- **WHEN** downloading any PDF from a URL
 - **THEN** system streams the content to disk instead of loading into memory
-- **AND** provides efficient handling of large threat reports
+- **AND** provides efficient handling of PDFs of any size
 
 #### Scenario: Handle network errors during download
 - **WHEN** PDF URL is unreachable, times out, or returns HTTP error

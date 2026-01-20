@@ -90,10 +90,14 @@ class TemporaryPDFDownload:
         # Set headers with modern browser User-Agent
         headers = {"User-Agent": USER_AGENT}
 
+        # Create session with 5-redirect limit per spec
+        session = requests.Session()
+        session.max_redirects = 5
+
         try:
             # Perform HEAD request to validate before downloading
             try:
-                head_response = requests.head(
+                head_response = session.head(
                     self.url, headers=headers, timeout=self.timeout, allow_redirects=True
                 )
                 head_response.raise_for_status()
@@ -123,7 +127,7 @@ class TemporaryPDFDownload:
 
             # Download with streaming to avoid loading entire file into memory
             try:
-                response = requests.get(
+                response = session.get(
                     self.url, headers=headers, timeout=self.timeout, stream=True, allow_redirects=True
                 )
                 response.raise_for_status()
