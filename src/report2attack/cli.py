@@ -104,11 +104,16 @@ def main(
     """
     report2attack: Automated threat intelligence to MITRE ATT&CK mapping.
 
-    INPUT_SOURCE can be a URL (http:// or https://) or a path to a PDF file.
+    INPUT_SOURCE can be:
+    - A web URL (http:// or https://)
+    - A PDF URL (ending in .pdf)
+    - A local PDF file path
 
     Example usage:
 
         report2attack https://example.com/threat-report.html
+
+        report2attack https://example.com/report.pdf
 
         report2attack report.pdf --formats json csv --output-dir ./results
     """

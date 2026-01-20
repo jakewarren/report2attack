@@ -4,6 +4,9 @@ from datetime import datetime
 
 import trafilatura
 
+# Modern browser User-Agent to avoid bot detection (Chrome 144, January 2026)
+USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.7559.59 Safari/537.36"
+
 
 class WebParser:
     """Parser for extracting clean text from web URLs."""
@@ -26,8 +29,10 @@ class WebParser:
             ValueError: If URL is invalid or unreachable
         """
         try:
-            # Download content
-            downloaded = trafilatura.fetch_url(url)
+            # Download content with custom User-Agent
+            config = trafilatura.settings.use_config()
+            config.set("DEFAULT", "USER_AGENTS", USER_AGENT)
+            downloaded = trafilatura.fetch_url(url, config=config)
             if downloaded is None:
                 raise ValueError(f"Failed to fetch content from URL: {url}")
 
