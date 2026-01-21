@@ -20,7 +20,7 @@ Check out the [examples](examples/) directory for example analysis output:
 
 - **[Markdown Report](examples/report2attack_report_20260119_122828.md)** - Human-readable analysis with detected techniques and evidence
 - **[JSON Output](examples/report2attack_report_20260119_122828.json)** - Structured data for programmatic access
-- **[ATT&CK Navigator](https://mitre-attack.github.io/attack-navigator/?tab=navigator&url=https://raw.githubusercontent.com/jakewarren/report2attack/refs/heads/main/examples/report2attack_report_20260119_122828_navigator.json)** - Interactive visualization of mapped techniques using the MITRE ATT&CK Navigator
+- **[ATT&CK Navigator](https://mitre-attack.github.io/attack-navigator/enterprise/#layerURL=https://raw.githubusercontent.com/jakewarren/report2attack/refs/heads/main/examples/report2attack_report_20260119_122828_navigator.json)** - Interactive visualization of mapped techniques using the MITRE ATT&CK Navigator
 
 ## Architecture
 
